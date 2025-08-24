@@ -5,6 +5,7 @@ import MUIThemeProvider from "@/src/components/MUIThemeProvider";
 import Link from "next/link";
 import ThemeToggle from "@/src/components/ThemeToggle";
 import SignOutButton from "@/src/components/SignOutButton";
+import SessionControls from "@/components/SessionControls";
 export const metadata: Metadata = {
   title: "Avexa UI (MUI)",
   description: "Customer Onboarding demo with Material UI",
@@ -31,10 +32,7 @@ export default function RootLayout({
                   </Link>
                   <Link href="/customers">Customers</Link>
                 </div>
-                <div className="right">
-                  <ThemeToggle />
-                  <SignOutButton />
-                </div>
+                <SessionControls />
               </nav>
             </header>
             <main className="container">{children}</main>
