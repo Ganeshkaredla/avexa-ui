@@ -48,8 +48,21 @@ export default function CustomersPage() {
       field: "dob",
       headerName: "DOB",
       flex: 1,
-      valueGetter: (p) =>
-        new Date(p.row?.dob ? p.row?.dob : null).toLocaleDateString(),
+      valueGetter: (params: any) => params.row?.dob ?? "",
+      renderCell: ({ row }) => {
+        const v = row?.dob;
+        if (!v) return ""; // nothing yet on first render
+        const t = Date.parse(v);
+        if (Number.isNaN(t)) return ""; // invalid → show blank (no 1970)
+        return new Date(t).toLocaleDateString();
+      },
+      sortComparator: (a, b) => {
+        const ta = typeof a === "string" ? Date.parse(a) : NaN;
+        const tb = typeof b === "string" ? Date.parse(b) : NaN;
+        const A = Number.isNaN(ta) ? -Infinity : ta;
+        const B = Number.isNaN(tb) ? -Infinity : tb;
+        return A - B;
+      },
     },
     { field: "status", headerName: "Status", flex: 1 },
     {

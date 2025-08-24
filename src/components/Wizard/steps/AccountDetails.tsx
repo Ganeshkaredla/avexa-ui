@@ -24,7 +24,7 @@ export default function AccountDetails() {
     },
     mode: "onChange",
   });
-  watch((vals) =>
+  watch((vals: any) =>
     update({
       ...vals,
       dob: typeof vals.dob === "string" ? vals.dob : vals.dob?.toString(),

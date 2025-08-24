@@ -1,7 +1,9 @@
 "use client";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
+
 type Step = 0 | 1 | 2;
+
 type State = {
   step: Step;
   data: {
@@ -13,6 +15,7 @@ type State = {
     profile?: { address?: string; notes?: string };
   };
 };
+
 type Actions = {
   next: () => void;
   prev: () => void;
@@ -20,16 +23,26 @@ type Actions = {
   update: (p: Partial<State["data"]>) => void;
   reset: () => void;
 };
-export const useOnboarding = create<State & Actions>()(
-  persist(
-    (set) => ({
+
+type Store = State & Actions;
+
+const clampStep = (n: number): Step => (n <= 0 ? 0 : n >= 2 ? 2 : (n as Step));
+
+export const useOnboarding = create<Store>()(
+  persist<Store>(
+    (set, get) => ({
       step: 0,
       data: {},
-      next: () => set((s) => ({ step: Math.min(2, (s.step + 1) as Step) })),
-      prev: () => set((s) => ({ step: Math.max(0, (s.step - 1) as Step) })),
+
+      next: () => set((s) => ({ step: clampStep(s.step + 1) })),
+
+      prev: () => set((s) => ({ step: clampStep(s.step - 1) })),
+
       setStep: (s) => set({ step: s }),
+
       update: (p) => set((s) => ({ data: { ...s.data, ...p } })),
-      reset: () => set({ step: 0, data: {} }),
+
+      reset: () => set({ step: 0 as Step, data: {} }),
     }),
     { name: "onboarding" }
   )
