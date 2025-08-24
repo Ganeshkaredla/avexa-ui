@@ -15,14 +15,14 @@ export function middleware(req: NextRequest) {
     return NextResponse.next();
   }
 
-  // If user is NOT logged in → always send them to /signin
+  // If not logged in and not already on /signin → send to /signin
   if (!isAuthed && pathname !== "/signin") {
     const url = req.nextUrl.clone();
     url.pathname = "/signin";
     return NextResponse.redirect(url);
   }
 
-  // If user IS logged in and tries to access /signin → send them to /dashboard
+  // If logged in and trying to access /signin → send to /dashboard
   if (isAuthed && pathname === "/signin") {
     const url = req.nextUrl.clone();
     url.pathname = "/dashboard";
@@ -32,7 +32,7 @@ export function middleware(req: NextRequest) {
   return NextResponse.next();
 }
 
-// Apply middleware to all routes
+// Apply to all routes except Next internals
 export const config = {
   matcher: ["/((?!_next|favicon.ico).*)"],
 };
